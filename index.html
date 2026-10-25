@@ -1,0 +1,927 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Campeonato Entre Eixos 2026.2 | LABMoH</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg-dark: #081528;
+      --bg-sidebar: #06101e;
+      --bg-card: #0f2444;
+      --bg-card-hover: #15325b;
+      --primary-blue: #1d72fe;
+      --primary-hover: #0b5ed7;
+      --primary-glow: rgba(29, 114, 254, 0.3);
+      --accent-cyan: #38bdf8;
+      --text-white: #ffffff;
+      --text-muted: #94a3b8;
+      --text-soft: #cbd5e1;
+      --border-color: rgba(255, 255, 255, 0.12);
+      --border-active: rgba(29, 114, 254, 0.6);
+      --font-display: 'Bebas Neue', sans-serif;
+      --font-body: 'Inter', sans-serif;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      -webkit-tap-highlight-color: transparent;
+    }
+
+    body {
+      background-color: var(--bg-dark);
+      color: var(--text-white);
+      font-family: var(--font-body);
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      overflow-x: hidden;
+    }
+
+    .app-container {
+      display: flex;
+      flex: 1;
+      height: 100vh;
+      overflow: hidden;
+    }
+
+    /* Sidebar Navigation */
+    .sidebar {
+      width: 290px;
+      background: var(--bg-sidebar);
+      border-right: 1px solid var(--border-color);
+      display: flex;
+      flex-direction: column;
+      z-index: 100;
+      transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+
+    .brand-header {
+      padding: 28px 24px 20px;
+      border-bottom: 1px solid var(--border-color);
+    }
+
+    .brand-text h1 {
+      font-family: var(--font-display);
+      font-size: 30px;
+      letter-spacing: 1.5px;
+      line-height: 1;
+      color: var(--text-white);
+    }
+
+    .brand-text span {
+      font-size: 11px;
+      color: var(--accent-cyan);
+      font-weight: 700;
+      letter-spacing: 1px;
+      text-transform: uppercase;
+      margin-top: 4px;
+      display: block;
+    }
+
+    .nav-scroll {
+      flex: 1;
+      overflow-y: auto;
+      padding: 16px 12px;
+    }
+
+    .nav-category {
+      font-size: 11px;
+      font-weight: 700;
+      text-transform: uppercase;
+      color: var(--text-muted);
+      letter-spacing: 1px;
+      padding: 12px 12px 6px;
+    }
+
+    .nav-btn {
+      width: 100%;
+      display: flex;
+      align-items: center;
+      padding: 12px 14px;
+      margin-bottom: 4px;
+      background: transparent;
+      border: 1px solid transparent;
+      border-radius: 8px;
+      color: var(--text-muted);
+      font-family: var(--font-body);
+      font-size: 14px;
+      font-weight: 500;
+      cursor: pointer;
+      text-align: left;
+      transition: all 0.2s ease;
+    }
+
+    .nav-btn:hover {
+      background: var(--bg-card);
+      color: var(--text-white);
+      border-color: rgba(255, 255, 255, 0.08);
+    }
+
+    .nav-btn.active {
+      background: linear-gradient(90deg, rgba(29, 114, 254, 0.22) 0%, rgba(29, 114, 254, 0.05) 100%);
+      color: var(--text-white);
+      border-color: var(--border-active);
+      font-weight: 600;
+      box-shadow: inset 3px 0 0 var(--primary-blue);
+    }
+
+    .nav-btn.special-final.active {
+      background: linear-gradient(90deg, rgba(56, 189, 248, 0.25) 0%, rgba(56, 189, 248, 0.05) 100%);
+      border-color: var(--accent-cyan);
+      box-shadow: inset 3px 0 0 var(--accent-cyan);
+    }
+
+    /* Main Content Area */
+    .content-area {
+      flex: 1;
+      overflow-y: auto;
+      padding: 40px;
+      background: radial-gradient(circle at top right, #0e274b 0%, #081528 75%);
+      position: relative;
+    }
+
+    /* Mobile bar */
+    .mobile-topbar {
+      display: none;
+      align-items: center;
+      justify-content: space-between;
+      padding: 16px 20px;
+      background: var(--bg-sidebar);
+      border-bottom: 1px solid var(--border-color);
+      position: sticky;
+      top: 0;
+      z-index: 90;
+    }
+
+    .menu-toggle-btn {
+      background: transparent;
+      border: 1px solid var(--border-color);
+      color: var(--text-white);
+      font-size: 16px;
+      font-weight: 600;
+      padding: 6px 14px;
+      border-radius: 6px;
+      cursor: pointer;
+      text-transform: uppercase;
+    }
+
+    .tab-pane {
+      display: none;
+      animation: fadeIn 0.3s ease;
+      max-width: 960px;
+      margin: 0 auto;
+    }
+
+    .tab-pane.active {
+      display: block;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(6px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    /* Typography */
+    .section-tag {
+      display: inline-block;
+      font-size: 12px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      color: var(--accent-cyan);
+      margin-bottom: 8px;
+    }
+
+    .page-title {
+      font-family: var(--font-display);
+      font-size: 54px;
+      letter-spacing: 1.5px;
+      line-height: 1;
+      margin-bottom: 12px;
+      color: var(--text-white);
+    }
+
+    .page-subtitle {
+      font-size: 16px;
+      color: var(--text-soft);
+      line-height: 1.5;
+      margin-bottom: 30px;
+    }
+
+    /* Grids */
+    .grid-2 {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 20px;
+      margin-bottom: 24px;
+    }
+
+    .grid-3 {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+      gap: 16px;
+      margin-bottom: 24px;
+    }
+
+    .card {
+      background: var(--bg-card);
+      border: 1px solid var(--border-color);
+      border-radius: 12px;
+      padding: 24px;
+      transition: border-color 0.25s, transform 0.25s;
+    }
+
+    .card:hover {
+      border-color: var(--border-active);
+      transform: translateY(-2px);
+    }
+
+    .card-title {
+      font-size: 12px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.8px;
+      color: var(--accent-cyan);
+      margin-bottom: 8px;
+    }
+
+    .card-value {
+      font-size: 22px;
+      font-weight: 700;
+      color: var(--text-white);
+      line-height: 1.25;
+    }
+
+    .card-desc {
+      font-size: 14px;
+      color: var(--text-soft);
+      margin-top: 6px;
+      line-height: 1.45;
+    }
+
+    /* Sections */
+    .rule-section {
+      background: var(--bg-card);
+      border: 1px solid var(--border-color);
+      border-radius: 12px;
+      padding: 28px;
+      margin-bottom: 24px;
+    }
+
+    .rule-section h3 {
+      font-family: var(--font-display);
+      font-size: 28px;
+      letter-spacing: 1px;
+      margin-bottom: 18px;
+      color: var(--text-white);
+    }
+
+    .rule-item {
+      display: flex;
+      gap: 14px;
+      margin-bottom: 14px;
+      align-items: flex-start;
+      line-height: 1.5;
+      font-size: 15px;
+      color: var(--text-soft);
+    }
+
+    .rule-item strong {
+      color: var(--text-white);
+    }
+
+    .rule-item .dot {
+      width: 7px;
+      height: 7px;
+      border-radius: 50%;
+      background: var(--primary-blue);
+      margin-top: 8px;
+      flex-shrink: 0;
+    }
+
+    .rule-item.prohibited .dot {
+      background: #f87171;
+    }
+
+    /* Box Alerta Azul */
+    .banner-alert {
+      background: rgba(29, 114, 254, 0.12);
+      border: 1px solid rgba(29, 114, 254, 0.4);
+      border-radius: 12px;
+      padding: 20px 22px;
+      margin-bottom: 24px;
+    }
+
+    .banner-alert h4 {
+      font-size: 16px;
+      font-weight: 700;
+      color: var(--accent-cyan);
+      margin-bottom: 4px;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+
+    .banner-alert p {
+      font-size: 14px;
+      color: var(--text-soft);
+      line-height: 1.45;
+    }
+
+    /* Simulator */
+    .simulator-box {
+      background: #091a33;
+      border: 1px solid var(--border-color);
+      border-radius: 12px;
+      padding: 24px;
+      margin-top: 16px;
+    }
+
+    .sim-slider-row {
+      margin-bottom: 16px;
+    }
+
+    .sim-label-val {
+      display: flex;
+      justify-content: space-between;
+      font-size: 14px;
+      font-weight: 600;
+      margin-bottom: 6px;
+      color: var(--text-soft);
+    }
+
+    .sim-slider {
+      width: 100%;
+      height: 6px;
+      border-radius: 3px;
+      background: #183b6c;
+      outline: none;
+      -webkit-appearance: none;
+    }
+
+    .sim-slider::-webkit-slider-thumb {
+      -webkit-appearance: none;
+      width: 18px;
+      height: 18px;
+      border-radius: 50%;
+      background: var(--accent-cyan);
+      cursor: pointer;
+    }
+
+    .sim-total-card {
+      background: rgba(29, 114, 254, 0.15);
+      border: 1px solid var(--primary-blue);
+      border-radius: 10px;
+      padding: 18px;
+      text-align: center;
+      margin-top: 18px;
+    }
+
+    .sim-total-number {
+      font-family: var(--font-display);
+      font-size: 52px;
+      color: var(--text-white);
+      line-height: 1;
+    }
+
+    /* Podium cards */
+    .podium-card {
+      border-left: 4px solid var(--border-color);
+      padding: 18px 20px;
+      margin-bottom: 12px;
+      background: var(--bg-card);
+      border-radius: 0 10px 10px 0;
+    }
+
+    .podium-card.p1 { border-left-color: var(--accent-cyan); }
+    .podium-card.p2 { border-left-color: #60a5fa; }
+    .podium-card.p3 { border-left-color: #93c5fd; }
+
+    .podium-card h4 {
+      font-size: 16px;
+      font-weight: 700;
+      color: var(--text-white);
+      margin-bottom: 4px;
+      letter-spacing: 0.5px;
+    }
+
+    .podium-card p {
+      font-size: 14px;
+      color: var(--text-soft);
+      line-height: 1.45;
+    }
+
+    @media (max-width: 900px) {
+      .sidebar {
+        position: fixed;
+        top: 0;
+        bottom: 0;
+        left: 0;
+        transform: translateX(-100%);
+      }
+
+      .sidebar.open {
+        transform: translateX(0);
+        box-shadow: 20px 0 50px rgba(0,0,0,0.8);
+      }
+
+      .mobile-topbar {
+        display: flex;
+      }
+
+      .content-area {
+        padding: 24px 18px;
+      }
+
+      .page-title {
+        font-size: 42px;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Topbar Mobile -->
+  <header class="mobile-topbar">
+    <div style="font-family:var(--font-display); font-size:22px; color:var(--text-white); letter-spacing:1px;">
+      ENTRE EIXOS
+    </div>
+    <button class="menu-toggle-btn" id="menuToggle">Menu</button>
+  </header>
+
+  <div class="app-container">
+    
+    <!-- Sidebar -->
+    <aside class="sidebar" id="sidebar">
+      <div class="brand-header">
+        <div class="brand-text">
+          <h1>ENTRE EIXOS</h1>
+          <span>LABMoH • UNEX Jequié</span>
+        </div>
+      </div>
+
+      <nav class="nav-scroll">
+        <div class="nav-category">Geral</div>
+        <button class="nav-btn active" data-tab="tab-home">
+          Visão Geral & Evento
+        </button>
+
+        <div class="nav-category">Desafios Oficiais</div>
+        <button class="nav-btn" data-tab="tab-placas">
+          1. Jogo de Placas
+        </button>
+        <button class="nav-btn" data-tab="tab-cego">
+          2. Cego, Surdo e Mudo
+        </button>
+        <button class="nav-btn" data-tab="tab-oquee">
+          3. O Que É?
+        </button>
+        <button class="nav-btn" data-tab="tab-diagnostico">
+          4. Diagnóstico Relâmpago
+        </button>
+        <button class="nav-btn" data-tab="tab-circuito">
+          5. Circuito Metabólico
+        </button>
+
+        <div class="nav-category">Fase Final & Premiação</div>
+        <button class="nav-btn special-final" data-tab="tab-final">
+          Grande Final (Peso x2)
+        </button>
+        <button class="nav-btn" data-tab="tab-premiacao">
+          Premiação & Regras
+        </button>
+      </nav>
+
+      <div style="padding:16px 20px; border-top:1px solid var(--border-color); font-size:12px; color:var(--text-muted); text-align:center;">
+        29 de Outubro • 18h50<br>
+        Laboratórios UNEX Jequié
+      </div>
+    </aside>
+
+    <!-- Content Area -->
+    <main class="content-area" id="contentArea">
+
+      <!-- TAB 0: HOME -->
+      <section class="tab-pane active" id="tab-home">
+        <div class="section-tag">Competição Oficial</div>
+        <h2 class="page-title">CAMPEONATO ENTRE EIXOS 2026.2</h2>
+        <p class="page-subtitle">Olimpíada acadêmica e prática promovida pela Liga Acadêmica de Biomecânica e Movimento Humano (LABMoH), voltada ao aprimoramento da cinesiologia e anatomia funcional.</p>
+
+        <div class="rule-section">
+          <h3>Cronograma Previsto</h3>
+          <div class="rule-item">
+            <div class="dot"></div>
+            <div><strong>18h50 - 19h00:</strong> Instruções</div>
+          </div>
+          <div class="rule-item">
+            <div class="dot"></div>
+            <div><strong>19h00 - 21h30:</strong> Desafios</div>
+          </div>
+          <div class="rule-item">
+            <div class="dot"></div>
+            <div><strong>21h30:</strong> Encerramento</div>
+          </div>
+        </div>
+      </section>
+
+      <!-- TAB 1: JOGO DE PLACAS -->
+      <section class="tab-pane" id="tab-placas">
+        <div class="section-tag">Desafio de Abertura</div>
+        <h2 class="page-title">1. JOGO DE PLACAS</h2>
+        <p class="page-subtitle">Abertura simultânea com velocidade de raciocínio. A equipe precisa de sincronia e precisão diante do projetor.</p>
+
+        <div class="grid-2">
+          <div class="card">
+            <div class="card-title">Formato</div>
+            <div class="card-value">Equipe Completa</div>
+            <div class="card-desc">Todas as 4 equipes respondem simultaneamente diante da tela principal.</div>
+          </div>
+          <div class="card">
+            <div class="card-title">Tempo por Questão</div>
+            <div class="card-value">30 Segundos</div>
+            <div class="card-desc">Tempo cronometrado após a leitura da pergunta para erguer a placa.</div>
+          </div>
+        </div>
+
+        <div class="rule-section">
+          <h3>Como Funciona a Dinâmica</h3>
+          <div class="rule-item">
+            <div class="dot"></div>
+            <div>O Mestre de Cerimônias projeta a pergunta de múltipla escolha no telão com 4 alternativas (A, B, C ou D).</div>
+          </div>
+          <div class="rule-item">
+            <div class="dot"></div>
+            <div>A equipe debate rapidamente em voz baixa até o comando oficial: <strong>"PLACAS PARA O ALTO!"</strong>.</div>
+          </div>
+          <div class="rule-item">
+            <div class="dot"></div>
+            <div>Os capitães levantam a placa correspondente simultaneamente. Placas levantadas com atraso ou alteradas após o comando não pontuam.</div>
+          </div>
+          <div class="rule-item">
+            <div class="dot"></div>
+            <div><strong>Pontuação:</strong> 1 ponto por resposta correta. Rodadas bônus nas fases finais podem valer pontuação dobrada.</div>
+          </div>
+        </div>
+      </section>
+
+      <!-- TAB 2: CEGO, SURDO E MUDO -->
+      <section class="tab-pane" id="tab-cego">
+        <div class="section-tag">Estação 1</div>
+        <h2 class="page-title">2. CEGO, SURDO E MUDO</h2>
+        <p class="page-subtitle">Comunicação proprioceptiva e motora com restrição sensorial imposta a cada integrante do trio.</p>
+
+        <div class="banner-alert">
+          <h4>Regra de Ouro (Penalidade)</h4>
+          <p>O <strong>Transmissor</strong> (quem sorteia o cartão) <strong>não pode dizer o nome do músculo ou do movimento em voz alta</strong>, mesmo quando for fisicamente capaz de falar. A transmissão do conteúdo é realizada exclusivamente por mímica corporal.</p>
+        </div>
+
+        <div class="grid-3">
+          <div class="card">
+            <div class="card-title">Cego (Vendado)</div>
+            <div class="card-value">Ouve e Fala</div>
+            <div class="card-desc">Não enxerga. Escuta o que os parceiros falam e responde ao avaliador.</div>
+          </div>
+          <div class="card">
+            <div class="card-title">Surdo (Abafador)</div>
+            <div class="card-value">Vê e Fala</div>
+            <div class="card-desc">Não escuta. Enxerga a mímica do colega e verbaliza em voz alta.</div>
+          </div>
+          <div class="card">
+            <div class="card-title">Mudo (Fita)</div>
+            <div class="card-value">Vê e Ouve</div>
+            <div class="card-desc">Boca vedada com fita. Comunica-se por gestos e aponta respostas.</div>
+          </div>
+        </div>
+
+        <div class="rule-section">
+          <h3>Sistema de Pontuação</h3>
+          <div class="rule-item">
+            <div class="dot"></div>
+            <div><strong>1 Ponto:</strong> Identificação correta do movimento articular executado.</div>
+          </div>
+          <div class="rule-item">
+            <div class="dot"></div>
+            <div><strong>1 Ponto:</strong> Identificação correta do músculo motor primário.</div>
+          </div>
+          <div class="rule-item prohibited">
+            <div class="dot"></div>
+            <div><strong>Penalidade:</strong> Espiar por baixo da venda, remover abafadores ou sussurrar anula a pontuação da rodada.</div>
+          </div>
+        </div>
+      </section>
+
+      <!-- TAB 3: O QUE É? -->
+      <section class="tab-pane" id="tab-oquee">
+        <div class="section-tag">Estação 2</div>
+        <h2 class="page-title">3. O QUE É?</h2>
+        <p class="page-subtitle">Raciocínio cinesiológico rápido em dupla. Quantos termos a dupla acerta no tempo limite de 60 segundos.</p>
+
+        <div class="grid-2">
+          <div class="card">
+            <div class="card-title">Formato</div>
+            <div class="card-value">Em Dupla</div>
+            <div class="card-desc">Um integrante de costas para o quadro; o parceiro de frente fornecendo as dicas.</div>
+          </div>
+          <div class="card">
+            <div class="card-title">Tempo Limite</div>
+            <div class="card-value">60 Segundos</div>
+            <div class="card-desc">Tempo contínuo para pontuar o maior número de termos anatômicos.</div>
+          </div>
+        </div>
+
+        <div class="rule-section">
+          <h3>Regras Específicas</h3>
+          <div class="rule-item">
+            <div class="dot"></div>
+            <div><strong>Permitido:</strong> Dicas funcionais, relações anatômicas, planos, eixos, origens e inserções. Exemplo para Fêmur: "Osso longo da coxa que articula com o acetábulo".</div>
+          </div>
+          <div class="rule-item prohibited">
+            <div class="dot"></div>
+            <div><strong>Proibido:</strong> Soletrar, usar rimas, falar parte do nome ou <strong>usar mímica e gestos corporais</strong> (mímica é restrita à outra estação).</div>
+          </div>
+          <div class="rule-item">
+            <div class="dot"></div>
+            <div><strong>Pontuação:</strong> 1 ponto por termo correto. Após o acerto, o avaliador libera o termo seguinte.</div>
+          </div>
+        </div>
+      </section>
+
+      <!-- TAB 4: DIAGNÓSTICO RELÂMPAGO -->
+      <section class="tab-pane" id="tab-diagnostico">
+        <div class="section-tag">Estação 3</div>
+        <h2 class="page-title">4. DIAGNÓSTICO RELÂMPAGO</h2>
+        <p class="page-subtitle">Avaliação cinesiológica e identificação do padrão de movimento alterado com paciente simulado.</p>
+
+        <div class="rule-section">
+          <h3>Estrutura da Avaliação</h3>
+          <p style="margin-bottom:18px; color:var(--text-soft);">O paciente simulado executa diante do grupo um movimento ou marcha com alteração funcional evidente. A equipe dispõe de <strong>2 minutos de discussão</strong> para entregar o gabarito dos <strong>7 itens técnicos</strong>:</p>
+
+          <div class="grid-2">
+            <div class="card">
+              <div class="card-title">1. Músculo Principal</div>
+              <div class="card-desc">Identificar a estrutura muscular primária insuficiente ou lesionada.</div>
+            </div>
+            <div class="card">
+              <div class="card-title">2. Movimento Comprometido</div>
+              <div class="card-desc">Ação articular primária que se encontra deficitária.</div>
+            </div>
+            <div class="card">
+              <div class="card-title">3. Plano de Movimento</div>
+              <div class="card-desc">Plano anatômico onde a disfunção ocorre (Sagital, Frontal ou Transversal).</div>
+            </div>
+            <div class="card">
+              <div class="card-title">4. Eixo Articular</div>
+              <div class="card-desc">Eixo correspondente (Látero-lateral, Ântero-posterior ou Longitudinal).</div>
+            </div>
+            <div class="card">
+              <div class="card-title">5. Hipótese Funcional</div>
+              <div class="card-desc">Definição da alteração funcional (ex: Sinal de Trendelenburg, Marcha Escarvante).</div>
+            </div>
+            <div class="card">
+              <div class="card-title">6. Músculos Compensadores</div>
+              <div class="card-desc">Sinergistas que atuam em sobrecarga para tentar compensar o déficit.</div>
+            </div>
+          </div>
+          
+          <div class="card" style="margin-top:12px;">
+            <div class="card-title">7. Teste Especial Indicado</div>
+            <div class="card-desc">Indicar a manobra ou teste físico funcional específico para confirmação diagnóstica.</div>
+          </div>
+        </div>
+
+        <div class="card">
+          <div class="card-title">Pontuação da Estação</div>
+          <div class="card-value">Até 7 Pontos</div>
+          <div class="card-desc">1 ponto por item respondido corretamente.</div>
+        </div>
+      </section>
+
+      <!-- TAB 5: CIRCUITO METABÓLICO -->
+      <section class="tab-pane" id="tab-circuito">
+        <div class="section-tag">Estação 4</div>
+        <h2 class="page-title">5. CIRCUITO METABÓLICO</h2>
+        <p class="page-subtitle">Integração entre esforço físico com peso corporal e raciocínio de fisiologia do exercício sob fadiga.</p>
+
+        <div class="grid-2">
+          <div class="card">
+            <div class="card-title">Atividade Física</div>
+            <div class="card-value">Exercícios Corporais</div>
+            <div class="card-desc">Estações com polichinelos, agachamentos livres e corrida estacionária.</div>
+          </div>
+          <div class="card">
+            <div class="card-title">Avaliação Teórica</div>
+            <div class="card-value">Perguntas Objetivas</div>
+            <div class="card-desc">Conceitos dos sistemas ATP-CP, Glicolítico, Oxidativo, Limiar de Lactato e FC.</div>
+          </div>
+        </div>
+
+        <div class="rule-section">
+          <h3>Mecânica da Prova</h3>
+          <div class="rule-item">
+            <div class="dot"></div>
+            <div>A equipe executa o número determinado de repetições físicas na estação.</div>
+          </div>
+          <div class="rule-item">
+            <div class="dot"></div>
+            <div>Para poder avançar à estação seguinte, um integrante deve responder corretamente ao cartão de fisiologia sorteado.</div>
+          </div>
+          <div class="rule-item prohibited">
+            <div class="dot"></div>
+            <div><strong>Em caso de erro:</strong> A equipe cumpre penalidade antes de seguir (+5 repetições de agachamento ou +15 segundos no cronômetro da equipe).</div>
+          </div>
+          <div class="rule-item">
+            <div class="dot"></div>
+            <div><strong>Vencedora:</strong> A equipe que concluir todas as estações no menor tempo total somadas as penalidades.</div>
+          </div>
+        </div>
+      </section>
+
+      <!-- TAB 6: GRANDE FINAL -->
+      <section class="tab-pane" id="tab-final">
+        <div class="section-tag">Fase Decisiva</div>
+        <h2 class="page-title">MISSÃO BIOMECÂNICA</h2>
+        <p class="page-subtitle">A grande final onde todas as equipes resolvem o caso clínico completo com pontuação dobrada.</p>
+
+        <div class="banner-alert">
+          <h4>Multiplicador de Pontuação (Peso Dobrado x2)</h4>
+          <p>A pontuação atribuída pela banca examinadora é multiplicada por 2 na tabela geral, permitindo alterações decisivas na classificação final.</p>
+        </div>
+
+        <div class="grid-2">
+          <div class="card">
+            <div class="card-title">Tempo de Discussão</div>
+            <div class="card-value">20 Minutos</div>
+            <div class="card-desc">Elaboração em equipe com o dossiê clínico do paciente em mãos.</div>
+          </div>
+          <div class="card">
+            <div class="card-title">Apresentação Oral</div>
+            <div class="card-value">5 a 7 Minutos</div>
+            <div class="card-desc">Sustentação clínica perante a banca avaliadora de docentes convidados.</div>
+          </div>
+        </div>
+
+        <div class="rule-section">
+          <h3>Critérios Oficiais da Banca (Até 30 pontos base)</h3>
+          
+          <div class="simulator-box">
+            <h4 style="color:var(--text-white); margin-bottom:14px; font-size:15px; text-transform:uppercase; letter-spacing:0.5px;">Simulador de Pontuação da Grande Final</h4>
+            
+            <div class="sim-slider-row">
+              <div class="sim-label-val">
+                <span>Diagnóstico Funcional e Testes Indicados</span>
+                <span id="val-diag" style="color:var(--accent-cyan);">10 / 10 pts</span>
+              </div>
+              <input type="range" min="0" max="10" value="10" class="sim-slider" id="slider-diag" oninput="updateScore()">
+            </div>
+
+            <div class="sim-slider-row">
+              <div class="sim-label-val">
+                <span>Justificativa Científica e Biomecânica</span>
+                <span id="val-just" style="color:var(--accent-cyan);">10 / 10 pts</span>
+              </div>
+              <input type="range" min="0" max="10" value="10" class="sim-slider" id="slider-just" oninput="updateScore()">
+            </div>
+
+            <div class="sim-slider-row">
+              <div class="sim-label-val">
+                <span>Trabalho em Equipe e Participação</span>
+                <span id="val-team" style="color:var(--accent-cyan);">5 / 5 pts</span>
+              </div>
+              <input type="range" min="0" max="5" value="5" class="sim-slider" id="slider-team" oninput="updateScore()">
+            </div>
+
+            <div class="sim-slider-row">
+              <div class="sim-label-val">
+                <span>Clareza e Comunicação da Apresentação</span>
+                <span id="val-comm" style="color:var(--accent-cyan);">5 / 5 pts</span>
+              </div>
+              <input type="range" min="0" max="5" value="5" class="sim-slider" id="slider-comm" oninput="updateScore()">
+            </div>
+
+            <div class="sim-total-card">
+              <div style="font-size:11px; font-weight:700; color:var(--text-muted); text-transform:uppercase; letter-spacing:1px;">Pontuação Final Computada (Base × 2)</div>
+              <div class="sim-total-number" id="totalScore">60 PONTOS</div>
+              <div style="font-size:13px; color:var(--text-soft); margin-top:4px;">Nota Base da Banca: <span id="baseScore">30</span> pts</div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- TAB 7: PREMIAÇÃO & REGRAS -->
+      <section class="tab-pane" id="tab-premiacao">
+        <div class="section-tag">Encerramento</div>
+        <h2 class="page-title">PREMIAÇÃO & REGULAMENTO</h2>
+        <p class="page-subtitle">Reconhecimento oficial, bolsas e critérios normativos de desempate da competição.</p>
+
+        <div class="rule-section">
+          <h3>Pódio Oficial da Edição 2026.2</h3>
+
+          <div class="podium-card p1">
+            <h4>1º LUGAR — CAMPEÕES GERAIS</h4>
+            <p><strong>Sorteio de 1 Bolsa de 100% na Qualité Cursos</strong> entre os vencedores da equipe + Certificado Oficial com Menção Honrosa de Campeão.</p>
+          </div>
+
+          <div class="podium-card p2">
+            <h4>2º LUGAR — VICE-CAMPEÕES</h4>
+            <p><strong>Sorteio de 3 Bolsas de 50% na Qualité Cursos</strong> entre os integrantes da equipe + Certificado Oficial com Menção Honrosa de Vice-Campeão.</p>
+          </div>
+
+          <div class="podium-card p3">
+            <h4>3º LUGAR — TERCEIRO COLOCADO</h4>
+            <p><strong>Vaga Garantida na Sessão Científica Fechada da LABMoH</strong> do dia <strong>05/11 com Palestrante Surpresa</strong> + Certificado com Menção Honrosa.</p>
+          </div>
+
+          <div class="podium-card" style="border-left-color:var(--primary-blue); margin-top:16px;">
+            <h4>TODOS OS PARTICIPANTES</h4>
+            <p>Certificado oficial com horas complementares reconhecidas pelo Colegiado de Fisioterapia da UNEX.</p>
+          </div>
+        </div>
+
+        <div class="rule-section">
+          <h3>Critérios Oficiais de Desempate</h3>
+          <div class="rule-item">
+            <div class="dot"></div>
+            <div><strong>1º Critério:</strong> Maior pontuação obtida na Grande Final (Missão Biomecânica).</div>
+          </div>
+          <div class="rule-item">
+            <div class="dot"></div>
+            <div><strong>2º Critério:</strong> Maior número de primeiros lugares obtidos nos desafios da fase classificatória.</div>
+          </div>
+          <div class="rule-item">
+            <div class="dot"></div>
+            <div><strong>3º Critério:</strong> Pergunta-relâmpago decisiva do Jogo de Placas no telão.</div>
+          </div>
+        </div>
+
+        <div class="rule-section">
+          <h3>Regime de Penalidades</h3>
+          <div class="rule-item">
+            <div class="dot"></div>
+            <div><strong>Advertência verbal:</strong> Casos leves de indisciplina ou atraso de posicionamento (sem perda de pontos na primeira ocorrência).</div>
+          </div>
+          <div class="rule-item prohibited">
+            <div class="dot"></div>
+            <div><strong>Perda de 1 a 3 pontos:</strong> Quebra da Regra de Ouro (falar no Cego/Surdo/Mudo, uso de mímica no O Que É?) ou atitude antidesportiva.</div>
+          </div>
+        </div>
+      </section>
+
+    </main>
+  </div>
+
+  <script>
+    const navButtons = document.querySelectorAll('.nav-btn');
+    const tabPanes = document.querySelectorAll('.tab-pane');
+    const sidebar = document.getElementById('sidebar');
+    const menuToggle = document.getElementById('menuToggle');
+    const contentArea = document.getElementById('contentArea');
+
+    navButtons.forEach(btn => {
+      btn.addEventListener('click', () => {
+        const targetTab = btn.getAttribute('data-tab');
+        
+        navButtons.forEach(b => b.classList.remove('active'));
+        btn.classList.add('active');
+
+        tabPanes.forEach(pane => pane.classList.remove('active'));
+        const activePane = document.getElementById(targetTab);
+        if (activePane) {
+          activePane.classList.add('active');
+          contentArea.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+
+        if (window.innerWidth <= 900) {
+          sidebar.classList.remove('open');
+        }
+      });
+    });
+
+    menuToggle.addEventListener('click', () => {
+      sidebar.classList.toggle('open');
+    });
+
+    function updateScore() {
+      const diag = parseInt(document.getElementById('slider-diag').value, 10);
+      const just = parseInt(document.getElementById('slider-just').value, 10);
+      const team = parseInt(document.getElementById('slider-team').value, 10);
+      const comm = parseInt(document.getElementById('slider-comm').value, 10);
+
+      document.getElementById('val-diag').textContent = `${diag} / 10 pts`;
+      document.getElementById('val-just').textContent = `${just} / 10 pts`;
+      document.getElementById('val-team').textContent = `${team} / 5 pts`;
+      document.getElementById('val-comm').textContent = `${comm} / 5 pts`;
+
+      const base = diag + just + team + comm;
+      const total = base * 2;
+
+      document.getElementById('baseScore').textContent = base;
+      document.getElementById('totalScore').textContent = `${total} PONTOS`;
+    }
+  </script>
+</body>
+</html>
